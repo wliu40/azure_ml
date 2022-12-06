@@ -37,21 +37,52 @@ df.head()
 # Write the config.json file to local directory
 # ws.write_config(path="./config")
 
-os.getcwd()
-local_data = 'azure_ml/data/LoanApprovalPrediction.csv'
-df = pd.read_csv(local_data)
+
+experiment = Experiment(workspace=workspace, name='new_test_experiment')
+
+# list the existing experiments
+# list_experiments = Experiment.list(workspace)
 
 
-data_ref = datastore.path('Loan+Approval+Prediction.csv').as_download()
-data_ref.to_pandas_dataframe()
+# -----------------------------------------------------
+# Run an experiment using start_logging method
+# -----------------------------------------------------
+new_run = experiment.start_logging(snapshot_directory=None)
+
+# -----------------------------------------------------
+# Do your stuff here
+
+# Count the observations
+total_observations = len(df)
+
+# Get the null/missing values
+nulldf = df.isnull().sum()
+
+# -----------------------------------------------------
+# Log metrics and Complete an experiment run
+# -----------------------------------------------------
+# Log the metrics to the workspace
+new_run.log("Total Observations", total_observations)
+
+# Log the missing data values
+# this will put a metric under this run,
+for columns in df.columns:
+    new_run.log(columns, nulldf[columns])
+
+new_run.complete()
 
 
-# upload the data to datastore and create a FileDataset from it
-folder_data = Dataset.File.upload_directory(src_dir="'azure_ml/data", target=(datastore, "local_data"))
-dataset = folder_data.register(workspace=workspace, name="testdf")
 
 
-experiment = Experiment(workspace=ws0, name='test-experiment')
-list_experiments = Experiment.list(ws0)
 
-list_experiments
+
+
+
+
+
+
+
+
+
+
+
