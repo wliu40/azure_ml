@@ -1,0 +1,14 @@
+name: experiment_env
+dependencies:
+- python=3.8
+- scikit-learn
+- lightgbm
+- numpy
+- ipykernel
+- matplotlib
+- seaborn
+- pandas
+- pip
+- pip:
+  - azureml-defaults
+  - pyarrow
